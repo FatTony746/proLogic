@@ -34,9 +34,9 @@ adjacent([X1,Y1], [X2,Y2]) :- (member(X1,[1,2,3]), member(X2,[1,2,3]), member(Y1
 %init([8,7],2).
 
 % Initial Board state for a 3x3 grid
-init([1,1],1).
-init([3,3],9).
-init([3,2],4).
+%init([1,1],1).
+%init([3,3],9).
+%init([3,2],4).
 
 
 % Function that will check if two points are the same.
@@ -49,19 +49,12 @@ samePoint([X1,Y1], [X2,Y2]) :- X1 is X2, Y1 is Y2.
 %    program doesn't scan for the position of a known number.
 partial(S, [H1, H2|R], N0) :-          N1 is N0-1, 
 										   N1 > 0,
-									 init(H2, N0),
                                   adjacent(H1,H2), 
 						   partial(S, [H2|R], N1), 
                                not(member(H1, R)), 
                            	   not(member(H2, R)).
 
-partial(S, [H1, H2|R], N0) :-          N1 is N0-1, 
-                                           N1 > 0,
-								not(init(H2, N0)),
-								  adjacent(H1,H2), 
-						   partial(S, [H2|R], N1), 
-                               not(member(H1, R)), 
-                           	   not(member(H2, R)).
+
 
 % Base case for partial function.
 % Just adds the start node to the path.
@@ -71,9 +64,8 @@ partial([S1x, S1y], [[S2x, S2y]], N0) :- S2x is S1x,
 				    	 					N0 is 1.
 % Helper Function: Just calls partial with a hard-coded 81, so calling complete will only
 %   solve the 9x9 grid.
-complete(S, Finished) :- partial(S, Finished, 81).
-
-
+complete(S, Finished) :- partial(S, Finished, 9),
+                         show(Finished).
 
 show(Soln) :- reverse(Soln, Forwards), write('\n'),
                    member(Row,[1,2,3,4,5,6,7,8,9]),
